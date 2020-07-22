@@ -1,0 +1,26 @@
+FROM mongo:3.6
+
+RUN mkdir -p /data/db \
+    && chown -R mongodb:mongodb /data/db
+
+RUN mkdir -p /data/log \
+    && chown -R mongodb:mongodb /data/log
+
+RUN touch /data/log/mongod.log \
+    && chown -R mongodb:mongodb /data/log/mongod.log
+
+RUN chown -R mongodb:mongodb /data
+
+COPY ./mongod.conf /etc/
+
+VOLUME ["/data/db"]
+
+CMD ["mongod", "--config", "/etc/mongod.conf"]
+
+EXPOSE 27017
+
+# How to build
+# $ docker build --tag mongodb:test .
+
+# How to run
+# $ docker run --name mongodb -d -p 27017:27017 -v ~/data/db:/data/db mongodb:test
